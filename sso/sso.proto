@@ -1,0 +1,43 @@
+// Версия ProtoBuf
+syntax = "proto3";
+
+// Текущий пакет - указывает пространство имен для сервиса и сообщений. Помогает избегать конфликтов имен.
+package auth;
+
+// Настройки для генерации Go кода.
+option go_package = "ipampurin.sso.v1;ssov1";
+
+// сервис Auth для управления доступом
+service Auth {
+  // Register регистрирует нового пользователя
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  // Login регистрирует пользователя и возвращает токет аутентификации
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+// следующий сервис (например, управления ролями) можно описать прямо здесь, либо вынести в отдельный файл
+// service Permissions {
+//    GetUserPermissions(GetUserPermissionsRequest) return UserPermissions
+// }
+
+// объект, который отправляется при вызове RPC-метода (ручки) Register
+message RegisterRequest {
+  string email = 1; // Email пользователя при регистрации
+  string password = 2; // Password пользователя при регистрации
+}
+
+// объект, который метод (ручка) вернёт
+message RegisterResponse {
+  int64 user_id = 1; // User ID of the registered user.
+}
+
+// то же самое для метода Login()
+message LoginRequest {
+  string email = 1; // Email пользователя для входа в систему
+  string password = 2; // Password пользователя для входа в систему
+  int32 app_id = 3; // ID приложения для входа в систему
+}
+
+message LoginResponse {
+  string token = 1; // Auth token - токен аутентификации вошедшего в систему пользователя
+}
